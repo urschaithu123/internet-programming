@@ -1,0 +1,1037 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Skyline | Flight Reservation</title>
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Segoe UI", Arial, sans-serif;
+}
+
+:root {
+    --bg: #061a2b;
+    --glass: rgba(13, 79, 105, 0.24);
+    --border: rgba(103, 220, 220, 0.22);
+    --cyan: #32d6c5;
+    --purple: #42b883;
+    --text: #effcff;
+    --muted: #a9c7d5;
+}
+
+html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 90px;
+}
+
+body {
+    color: var(--text);
+    background:
+        radial-gradient(ellipse at 10% 10%, rgba(22, 110, 160, .28), transparent 35%),
+        radial-gradient(ellipse at 90% 40%, rgba(26, 165, 190, .18), transparent 30%),
+        var(--bg);
+    min-height: 100vh;
+    line-height: 1.6;
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+button, input, select, textarea {
+    font: inherit;
+}
+
+button {
+    cursor: pointer;
+    transition: .3s ease;
+}
+
+.container {
+    width: min(1150px, 92%);
+    margin: auto;
+}
+
+header {
+    padding: 20px 4%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    flex-wrap: wrap;
+    border-bottom: 1px solid var(--border);
+    background: rgba(6, 26, 43, .9);
+    backdrop-filter: blur(18px);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.logo {
+    font-size: 23px;
+    font-weight: 800;
+    letter-spacing: 1px;
+}
+
+.logo span, .logo-icon {
+    color: var(--cyan);
+}
+
+.logo-icon {
+    margin-right: 7px;
+}
+
+nav {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 7px;
+}
+
+nav a {
+    color: var(--muted);
+    font-size: 13px;
+    padding: 9px 11px;
+    border-radius: 10px;
+    transition: .3s;
+}
+
+nav a:hover {
+    color: white;
+    background: rgba(255,255,255,.09);
+}
+
+nav .nav-login {
+    color: #06202b;
+    background: linear-gradient(100deg, var(--cyan), #8af3e5);
+    font-weight: 700;
+    padding: 10px 17px;
+}
+
+.hero {
+    min-height: 460px;
+    margin: 25px auto 0;
+    width: 94%;
+    max-width: 1500px;
+    border: 1px solid var(--border);
+    border-radius: 28px;
+    overflow: hidden;
+    position: relative;
+    display: flex;
+    align-items: center;
+    background:
+        linear-gradient(90deg, rgba(4,24,39,.96) 0%, rgba(4,24,39,.72) 48%, rgba(4,24,39,.12) 100%),
+        url("https://images.unsplash.com/photo-1436491865332-7a61a109cc05?auto=format&fit=crop&w=1800&q=85")
+        center/cover no-repeat;
+}
+
+.hero-content {
+    max-width: 650px;
+    padding: 65px 7%;
+    position: relative;
+    z-index: 1;
+}
+
+.eyebrow {
+    display: inline-block;
+    color: var(--cyan);
+    border: 1px solid rgba(50,214,197,.35);
+    background: rgba(50,214,197,.08);
+    border-radius: 30px;
+    padding: 7px 15px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    margin-bottom: 22px;
+}
+
+.hero h1 {
+    font-size: clamp(38px, 5.5vw, 68px);
+    line-height: 1.08;
+    letter-spacing: -2px;
+    margin-bottom: 20px;
+}
+
+.gradient-text {
+    background: linear-gradient(90deg, var(--cyan), #58d9ad);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+.hero p {
+    color: #d0e8ef;
+    font-size: 16px;
+    max-width: 460px;
+    margin-bottom: 28px;
+}
+
+.primary-btn {
+    display: inline-block;
+    border: none;
+    border-radius: 12px;
+    color: #06202b;
+    background: linear-gradient(110deg, var(--cyan), #80e8df);
+    font-weight: 800;
+    padding: 13px 23px;
+    box-shadow: 0 8px 28px rgba(50,214,197,.18);
+}
+
+.primary-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 32px rgba(50,214,197,.3);
+}
+
+.secondary-btn {
+    color: white;
+    background: rgba(255,255,255,.08);
+    border: 1px solid var(--border);
+    padding: 12px 20px;
+    border-radius: 12px;
+    margin-left: 10px;
+    display: inline-block;
+}
+
+.secondary-btn:hover {
+    background: rgba(255,255,255,.15);
+}
+
+.glass {
+    background: var(--glass);
+    border: 1px solid var(--border);
+    border-radius: 22px;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    box-shadow: 0 15px 45px rgba(0,0,0,.16);
+}
+
+.search {
+    padding: 28px;
+    margin: -35px auto 35px;
+    position: relative;
+    z-index: 5;
+    background: rgba(8,48,65,.94);
+    border: 1px solid rgba(103,220,220,.22);
+    border-radius: 22px;
+    box-shadow: 0 20px 55px rgba(0,0,0,.28);
+    backdrop-filter: blur(24px);
+}
+
+.section {
+    padding: 28px;
+    margin: 25px 0;
+}
+
+.section h2, .search h2 {
+    font-size: 23px;
+    margin-bottom: 8px;
+    letter-spacing: -.4px;
+}
+
+.section h2::after, .search h2::after {
+    content: "";
+    display: block;
+    height: 3px;
+    width: 48px;
+    margin-top: 9px;
+    border-radius: 5px;
+    background: linear-gradient(90deg, var(--cyan), var(--purple));
+}
+
+.subtitle {
+    color: var(--muted);
+    font-size: 14px;
+    margin-bottom: 22px;
+}
+
+form {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 15px;
+    align-items: end;
+}
+
+.field label {
+    display: block;
+    color: #bddee5;
+    font-size: 12px;
+    font-weight: 700;
+    margin-bottom: 7px;
+}
+
+input, select, textarea {
+    width: 100%;
+    padding: 13px 14px;
+    color: white;
+    background: rgba(255,255,255,.055);
+    border: 1px solid rgba(255,255,255,.15);
+    border-radius: 11px;
+    outline: none;
+    margin-bottom: 0;
+    transition: .25s;
+}
+
+input::placeholder, textarea::placeholder {
+    color: #99b4c2;
+}
+
+input:focus, select:focus, textarea:focus {
+    border-color: var(--cyan);
+    box-shadow: 0 0 0 3px rgba(50,214,197,.10);
+}
+
+input[type="date"] {
+    color-scheme: dark;
+}
+
+select option {
+    color: white;
+    background: #082f43;
+}
+
+form button, .action-btn {
+    padding: 13px 18px;
+    border: none;
+    border-radius: 11px;
+    color: #06202b;
+    background: linear-gradient(110deg, var(--cyan), #80e8df);
+    font-weight: 800;
+}
+
+form button:hover, .action-btn:hover {
+    transform: translateY(-2px);
+    filter: brightness(1.08);
+}
+
+.table-wrap {
+    width: 100%;
+    overflow-x: auto;
+    margin-top: 20px;
+    border-radius: 14px;
+    border: 1px solid var(--border);
+}
+
+table {
+    width: 100%;
+    min-width: 750px;
+    border-collapse: collapse;
+}
+
+th {
+    background: rgba(50,214,197,.12);
+    color: var(--cyan);
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: .7px;
+}
+
+th, td {
+    padding: 17px 13px;
+    text-align: center;
+    border-bottom: 1px solid rgba(255,255,255,.08);
+}
+
+td {
+    color: #dceff5;
+    font-size: 14px;
+}
+
+tbody tr {
+    transition: .25s;
+}
+
+tbody tr:hover {
+    background: rgba(50,214,197,.06);
+}
+
+tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.flight-code {
+    color: var(--cyan);
+    font-weight: 800;
+}
+
+.fare {
+    font-weight: 800;
+    color: white;
+}
+
+.book-btn {
+    border: 1px solid rgba(50,214,197,.3);
+    background: rgba(50,214,197,.12);
+    color: var(--cyan);
+    padding: 8px 17px;
+    border-radius: 9px;
+    font-weight: 700;
+}
+
+.book-btn:hover {
+    color: #06202b;
+    background: var(--cyan);
+}
+
+ul {
+    margin: 18px 0 0 20px;
+    color: #c8e0e8;
+}
+
+ul li {
+    padding: 5px 0;
+}
+
+#ticketList li {
+    margin: 8px 0;
+    padding: 13px;
+    list-style: none;
+    margin-left: -20px;
+    border-radius: 10px;
+    background: rgba(255,255,255,.045);
+    border: 1px solid var(--border);
+    overflow-wrap: anywhere;
+}
+
+#ticketMessage, #statusMessage, #searchMessage,
+#feedbackMessage, #message {
+    color: var(--cyan);
+    margin-top: 14px;
+    font-size: 14px;
+}
+
+#bookingId {
+    margin: 12px 0;
+}
+
+.status-btn {
+    border: none;
+    padding: 12px 19px;
+    color: #06202b;
+    background: linear-gradient(110deg, var(--cyan), #80e8df);
+    border-radius: 10px;
+    font-weight: 800;
+}
+
+#authSection {
+    display: none;
+    width: min(430px, 92%);
+    padding: 30px;
+    margin: 30px auto;
+    position: relative;
+    z-index: 10;
+    background: rgba(8,48,65,.96);
+    border: 1px solid rgba(255,255,255,.17);
+    border-radius: 22px;
+    box-shadow: 0 25px 70px rgba(0,0,0,.35);
+    backdrop-filter: blur(25px);
+}
+
+#authSection h2 {
+    text-align: center;
+    margin-bottom: 24px;
+    font-size: 25px;
+}
+
+#authForm {
+    display: flex;
+    flex-direction: column;
+    gap: 13px;
+}
+
+#authForm input {
+    margin-bottom: 0;
+}
+
+#authForm button {
+    margin-top: 5px;
+}
+
+.closeBtn {
+    width: 100%;
+    margin-top: 12px;
+    padding: 11px;
+    color: #dceff5;
+    background: rgba(255,255,255,.08);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+}
+
+.closeBtn:hover {
+    background: rgba(255,255,255,.15);
+}
+
+textarea {
+    min-height: 130px;
+    resize: vertical;
+    margin: 15px 0;
+}
+
+.contact-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.contact-item {
+    border: 1px solid var(--border);
+    border-radius: 15px;
+    padding: 20px;
+    background: rgba(255,255,255,.035);
+    overflow-wrap: anywhere;
+}
+
+.contact-item .symbol {
+    color: var(--cyan);
+    font-size: 25px;
+    margin-bottom: 8px;
+}
+
+.contact-item h3 {
+    font-size: 15px;
+    margin-bottom: 5px;
+}
+
+.contact-item p {
+    color: var(--muted);
+    font-size: 13px;
+}
+
+footer {
+    margin-top: 55px;
+    padding: 28px 15px;
+    text-align: center;
+    color: var(--muted);
+    border-top: 1px solid var(--border);
+    background: rgba(4,24,39,.8);
+    font-size: 13px;
+}
+
+footer strong {
+    color: var(--cyan);
+}
+
+@media (max-width: 760px) {
+    header {
+        justify-content: center;
+        position: relative;
+    }
+
+    nav {
+        width: 100%;
+    }
+
+    nav a {
+        padding: 8px;
+        font-size: 12px;
+    }
+
+    .hero {
+        min-height: 420px;
+        background-position: 58% center;
+    }
+
+    .hero-content {
+        padding: 45px 7%;
+    }
+
+    .hero h1 {
+        letter-spacing: -1px;
+    }
+
+    .search {
+        margin-top: 20px;
+        padding: 22px;
+    }
+
+    .section {
+        padding: 22px 18px;
+    }
+
+    .secondary-btn {
+        margin: 12px 0 0;
+    }
+}
+
+@media (max-width: 450px) {
+    .hero h1 {
+        font-size: 39px;
+    }
+
+    .hero p {
+        font-size: 14px;
+    }
+
+    .search h2, .section h2 {
+        font-size: 21px;
+    }
+
+    form {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header id="home">
+    <a href="#home" class="logo">
+        <span class="logo-icon">✈</span> SKY<span>LINE</span>
+    </a>
+
+    <nav>
+        <a href="#home">Home</a>
+        <a href="#searchFlights">Flights</a>
+        <a href="#availableFlights">Book Ticket</a>
+        <a href="#myTicket" onclick="showTickets(event)">My Ticket</a>
+        <a href="#bookingStatus">Status</a>
+        <a href="#" onclick="showAuth('login'); return false;" class="nav-login">Login</a>
+        <a href="#" onclick="showAuth('register'); return false;">Register</a>
+        <a href="#" onclick="showAuth('admin'); return false;">Admin</a>
+        <a href="#contact">Contact</a>
+    </nav>
+</header>
+
+<section class="hero">
+    <div class="hero-content">
+        <span class="eyebrow">✦ FLY BEYOND ORDINARY</span>
+        <h1>Your journey<br>begins <span class="gradient-text">here.</span></h1>
+        <p>
+            Discover new destinations, find your perfect flight,
+            and enjoy a smoother travel experience from takeoff to landing.
+        </p>
+        <a href="#searchFlights" class="primary-btn">Explore Flights ↗</a>
+        <a href="#availableFlights" class="secondary-btn">View Flights</a>
+    </div>
+</section>
+
+<section id="authSection">
+    <h2 id="formTitle">User Login</h2>
+
+    <form id="authForm">
+        <input type="text" id="username" placeholder="Enter your name">
+        <input type="email" id="email" placeholder="Enter your email" required>
+        <input type="password" id="password" placeholder="Enter your password" required>
+        <button type="submit" id="submitBtn">Login</button>
+    </form>
+
+    <button class="closeBtn" onclick="closeAuth()">Close</button>
+    <p id="message"></p>
+</section>
+
+<main class="container">
+
+    <section class="search" id="searchFlights">
+        <h2>Find your next flight</h2>
+        <p class="subtitle">Choose your destination and travel details.</p>
+
+        <form id="flightSearchForm">
+            <div class="field">
+                <label for="from">FROM</label>
+                <input type="text" id="from" placeholder="Departure city" required>
+            </div>
+
+            <div class="field">
+                <label for="to">TO</label>
+                <input type="text" id="to" placeholder="Destination city" required>
+            </div>
+
+            <div class="field">
+                <label for="travelDate">DEPARTURE DATE</label>
+                <input type="date" id="travelDate" required>
+            </div>
+
+            <div class="field">
+                <label for="flightClass">CABIN CLASS</label>
+                <select id="flightClass" required>
+                    <option value="">Select class</option>
+                    <option>Economy</option>
+                    <option>Premium Economy</option>
+                    <option>Business</option>
+                    <option>First Class</option>
+                </select>
+            </div>
+
+            <button type="submit">Search Flights →</button>
+        </form>
+
+        <p id="searchMessage"></p>
+    </section>
+
+    <section class="section glass" id="availableFlights">
+        <h2>Available Flights</h2>
+        <p class="subtitle">Explore our sample flights and choose your journey.</p>
+
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Flight No.</th>
+                        <th>Airline</th>
+                        <th>Departure</th>
+                        <th>Arrival</th>
+                        <th>Seats</th>
+                        <th>Fare</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr>
+                        <td class="flight-code">AI101</td>
+                        <td>Air India</td>
+                        <td>08:00 AM</td>
+                        <td>10:15 AM</td>
+                        <td>25</td>
+                        <td class="fare">$180</td>
+                        <td>
+                            <button class="book-btn" onclick="bookFlight('AI101','Air India','$180')">Book</button>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td class="flight-code">6E305</td>
+                        <td>IndiGo</td>
+                        <td>11:30 AM</td>
+                        <td>01:45 PM</td>
+                        <td>18</td>
+                        <td class="fare">$150</td>
+                        <td>
+                            <button class="book-btn" onclick="bookFlight('6E305','IndiGo','$150')">Book</button>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td class="flight-code">SG220</td>
+                        <td>SpiceJet</td>
+                        <td>04:00 PM</td>
+                        <td>06:20 PM</td>
+                        <td>10</td>
+                        <td class="fare">$170</td>
+                        <td>
+                            <button class="book-btn" onclick="bookFlight('SG220','SpiceJet','$170')">Book</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <section class="section glass" id="myTicket">
+        <h2>My Tickets</h2>
+        <p class="subtitle">Your booking history will appear here.</p>
+        <p id="ticketMessage">Please log in to view your demo tickets.</p>
+        <ul id="ticketList"></ul>
+    </section>
+
+    <section class="section glass" id="bookingStatus">
+        <h2>Booking Status</h2>
+        <p class="subtitle">Enter your booking ID to check your demo booking.</p>
+        <input type="text" id="bookingId" placeholder="Example: 1001">
+        <button class="status-btn" onclick="checkBooking()">Check Status →</button>
+        <p id="statusMessage"></p>
+    </section>
+
+    <section class="section glass">
+        <h2>Passenger Services</h2>
+        <p class="subtitle">Everything you need for your travel journey.</p>
+        <ul>
+            <li>User registration and login</li>
+            <li>Search flights and book tickets</li>
+            <li>Online payment — planned feature</li>
+            <li>View booking status</li>
+            <li>Print e-ticket — planned feature</li>
+            <li>Cancel tickets — planned feature</li>
+            <li>View booking history</li>
+            <li>Submit customer feedback</li>
+        </ul>
+    </section>
+
+    <section class="section glass">
+        <h2>Administrator Services</h2>
+        <p class="subtitle">Administrative features planned for the full system.</p>
+        <ul>
+            <li>Administrator login</li>
+            <li>Forgot password</li>
+            <li>Manage flights</li>
+            <li>Manage seat availability</li>
+            <li>Manage flight schedules</li>
+            <li>Manage users</li>
+            <li>Generate reports</li>
+            <li>View ticket payments</li>
+        </ul>
+    </section>
+
+    <section class="section glass">
+        <h2>Share Your Feedback</h2>
+        <p class="subtitle">Tell us how we can improve your travel experience.</p>
+        <textarea id="feedback" rows="5" placeholder="Write your feedback here..."></textarea>
+        <button class="primary-btn" onclick="submitFeedback()">Submit Feedback →</button>
+        <p id="feedbackMessage"></p>
+    </section>
+
+    <section class="section glass" id="contact">
+        <h2>Get in Touch</h2>
+        <p class="subtitle">Need assistance? Contact our support team.</p>
+
+        <div class="contact-grid">
+            <div class="contact-item">
+                <div class="symbol">✉</div>
+                <h3>Email Support</h3>
+                <p>support@flightbooking.com</p>
+            </div>
+
+            <div class="contact-item">
+                <div class="symbol">☎</div>
+                <h3>Call Us</h3>
+                <p>+1 9876543210</p>
+            </div>
+
+            <div class="contact-item">
+                <div class="symbol">⌖</div>
+                <h3>Our Location</h3>
+                <p>International Airport, Main City</p>
+            </div>
+        </div>
+    </section>
+
+</main>
+
+<footer>
+    <p>© 2026 <strong>SKYLINE</strong> Flight Reservation System</p>
+    <p>Designed for a smoother travel experience. All rights reserved.</p>
+</footer>
+
+<script>
+let currentMode = "login";
+let loggedIn = false;
+let currentUser = "";
+let tickets = [];
+let nextBookingId = 1001;
+
+function getLocalDate() {
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, "0");
+    const day = String(now.getDate()).padStart(2, "0");
+    return `${year}-${month}-${day}`;
+}
+
+document.getElementById("travelDate").min = getLocalDate();
+
+function showAuth(mode) {
+    currentMode = mode;
+
+    const section = document.getElementById("authSection");
+    const username = document.getElementById("username");
+    const message = document.getElementById("message");
+
+    section.style.display = "block";
+    message.textContent = "";
+
+    username.style.display = mode === "login" ? "none" : "block";
+    username.required = mode !== "login";
+
+    if (mode === "login") {
+        document.getElementById("formTitle").textContent = "Welcome Back";
+        document.getElementById("submitBtn").textContent = "Login";
+    } else if (mode === "register") {
+        document.getElementById("formTitle").textContent = "Create Account";
+        document.getElementById("submitBtn").textContent = "Register";
+    } else {
+        document.getElementById("formTitle").textContent = "Admin Login";
+        document.getElementById("submitBtn").textContent = "Admin Login";
+    }
+
+    section.scrollIntoView({ behavior: "smooth", block: "center" });
+}
+
+function closeAuth() {
+    document.getElementById("authSection").style.display = "none";
+}
+
+document.getElementById("authForm").addEventListener("submit", function(event) {
+    event.preventDefault();
+
+    const name = document.getElementById("username").value.trim();
+    const email = document.getElementById("email").value.trim();
+    const password = document.getElementById("password").value;
+    const message = document.getElementById("message");
+
+    if (currentMode === "admin") {
+        if (email === "admin@flight.com" && password === "admin123") {
+            loggedIn = true;
+            currentUser = "Administrator";
+            message.textContent = "Demo admin login successful!";
+        } else {
+            message.textContent = "Demo credentials: admin@flight.com / admin123";
+            return;
+        }
+    } else if (currentMode === "register") {
+        if (!name) {
+            message.textContent = "Please enter your name.";
+            return;
+        }
+
+        loggedIn = true;
+        currentUser = name;
+        message.textContent = "Demo registration successful!";
+    } else {
+        loggedIn = true;
+        currentUser = email;
+        message.textContent = "Demo login successful!";
+    }
+
+    updateTickets();
+    setTimeout(closeAuth, 1200);
+});
+
+document.getElementById("flightSearchForm").addEventListener("submit", function(event) {
+    event.preventDefault();
+
+    const from = document.getElementById("from").value.trim();
+    const to = document.getElementById("to").value.trim();
+    const date = document.getElementById("travelDate").value;
+    const message = document.getElementById("searchMessage");
+
+    if (from.toLowerCase() === to.toLowerCase()) {
+        message.textContent = "Departure and destination must be different.";
+        return;
+    }
+
+    if (date < getLocalDate()) {
+        message.textContent = "Please select today or a future date.";
+        return;
+    }
+
+    message.textContent = "Demo search: " + from + " to " + to + " on " + date +
+        ". Sample flights are shown below.";
+
+    document.getElementById("availableFlights").scrollIntoView({
+        behavior: "smooth"
+    });
+});
+
+function bookFlight(flightNo, airline, fare) {
+    if (!loggedIn) {
+        alert("Please log in or register before booking a flight.");
+        showAuth("login");
+        return;
+    }
+
+    const from = document.getElementById("from").value.trim();
+    const to = document.getElementById("to").value.trim();
+    const date = document.getElementById("travelDate").value;
+    const flightClass = document.getElementById("flightClass").value;
+
+    if (!from || !to || !date || !flightClass) {
+        alert("Please complete the flight search details first.");
+        document.getElementById("searchFlights").scrollIntoView({
+            behavior: "smooth"
+        });
+        return;
+    }
+
+    if (from.toLowerCase() === to.toLowerCase()) {
+        alert("Departure and destination must be different.");
+        return;
+    }
+
+    if (date < getLocalDate()) {
+        alert("Please select today or a future date.");
+        return;
+    }
+
+    const ticket = {
+        id: nextBookingId++,
+        flightNo: flightNo,
+        airline: airline,
+        fare: fare,
+        from: from,
+        to: to,
+        date: date,
+        flightClass: flightClass
+    };
+
+    tickets.push(ticket);
+    updateTickets();
+
+    alert("Demo booking successful! Your Booking ID is " + ticket.id);
+
+    document.getElementById("myTicket").scrollIntoView({
+        behavior: "smooth"
+    });
+}
+
+function updateTickets() {
+    document.getElementById("ticketMessage").textContent =
+        "Logged in as " + currentUser + ". Demo tickets: " + tickets.length;
+
+    const list = document.getElementById("ticketList");
+    list.innerHTML = "";
+
+    tickets.forEach(function(ticket) {
+        const item = document.createElement("li");
+
+        item.textContent =
+            "Booking ID: " + ticket.id +
+            " | " + ticket.flightNo + " - " + ticket.airline +
+            " | " + ticket.from + " to " + ticket.to +
+            " | Date: " + ticket.date +
+            " | Class: " + ticket.flightClass +
+            " | Fare: " + ticket.fare;
+
+        list.appendChild(item);
+    });
+}
+
+function showTickets(event) {
+    if (!loggedIn) {
+        event.preventDefault();
+        showAuth("login");
+    } else {
+        updateTickets();
+    }
+}
+
+function checkBooking() {
+    const id = document.getElementById("bookingId").value.trim();
+    const message = document.getElementById("statusMessage");
+
+    const ticket = tickets.find(function(item) {
+        return String(item.id) === id;
+    });
+
+    if (!id) {
+        message.textContent = "Please enter a Booking ID.";
+    } else if (ticket) {
+        message.textContent = "Demo status: Booking created for " +
+            ticket.airline + ", flight " + ticket.flightNo + ".";
+    } else {
+        message.textContent = "Booking not found in this page session.";
+    }
+}
+
+function submitFeedback() {
+    const feedback = document.getElementById("feedback").value.trim();
+    const message = document.getElementById("feedbackMessage");
+
+    if (!feedback) {
+        message.textContent = "Please enter your feedback.";
+        return;
+    }
+
+    message.textContent = "Thank you! Your demo feedback has been submitted.";
+    document.getElementById("feedback").value = "";
+}
+</script>
+
+</body>
+</html>
