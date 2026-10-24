@@ -1,0 +1,897 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GoRide | Online Bus Booking</title>
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Segoe UI", Arial, sans-serif;
+}
+
+:root {
+    --primary: #6254e7;
+    --secondary: #4338ca;
+    --dark: #11152f;
+    --muted: #777c98;
+    --glass: rgba(255,255,255,.13);
+    --border: rgba(255,255,255,.23);
+    --light: #f5f6ff;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    background: var(--light);
+    color: #242746;
+}
+
+/* HERO */
+.hero {
+    min-height: 590px;
+    position: relative;
+    color: white;
+    background:
+        linear-gradient(115deg, rgba(13,17,52,.95),
+        rgba(48,38,128,.78), rgba(34,41,100,.55)),
+        url("https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?w=1800")
+        center/cover;
+    overflow: hidden;
+}
+
+/* NAVBAR */
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 22px 7%;
+    border-bottom: 1px solid #ffffff25;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.logo {
+    font-size: 29px;
+    font-weight: 900;
+    letter-spacing: 1px;
+}
+
+.logo span {
+    color: #a9a0ff;
+}
+
+nav {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 22px;
+}
+
+nav a {
+    text-decoration: none;
+    color: #f0efff;
+    font-size: 14px;
+    transition: .3s;
+}
+
+nav a:hover {
+    color: #b7adff;
+}
+
+nav .nav-login {
+    border: 1px solid #aaa1ff;
+    border-radius: 30px;
+    padding: 10px 18px;
+}
+
+/* HERO CONTENT */
+.hero-content {
+    max-width: 850px;
+    padding: 95px 8% 120px;
+}
+
+.eyebrow {
+    color: #b7adff;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+}
+
+.hero h1 {
+    font-size: clamp(40px, 6vw, 70px);
+    line-height: 1.1;
+    margin: 22px 0;
+}
+
+.hero h1 span {
+    color: #b7adff;
+}
+
+.hero-content p.description {
+    max-width: 560px;
+    line-height: 1.8;
+    color: #e3e4fa;
+    font-size: 17px;
+}
+
+/* BUTTONS */
+button {
+    border: none;
+    background: linear-gradient(135deg, #7869ff, #5948dc);
+    color: white;
+    padding: 13px 22px;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: .3s;
+}
+
+button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px #6254e744;
+}
+
+.hero-content button {
+    margin-top: 25px;
+}
+
+/* GLASS SEARCH PANEL */
+.search-wrap {
+    width: 88%;
+    max-width: 1200px;
+    margin: -65px auto 0;
+    position: relative;
+    z-index: 2;
+}
+
+.search {
+    padding: 28px;
+    border-radius: 22px;
+    background: rgba(255,255,255,.78);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border: 1px solid white;
+    box-shadow: 0 20px 60px #27245c20;
+}
+
+.search h2 {
+    color: #252650;
+    font-size: 23px;
+    margin-bottom: 20px;
+}
+
+.search form {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0,1fr)) auto;
+    align-items: end;
+    gap: 15px;
+}
+
+.field label {
+    display: block;
+    font-size: 12px;
+    font-weight: 800;
+    color: #575b80;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: .6px;
+}
+
+input, select, textarea {
+    width: 100%;
+    padding: 13px;
+    border: 1px solid #e0e2f2;
+    border-radius: 10px;
+    background: rgba(255,255,255,.9);
+    font-size: 14px;
+    color: #252746;
+    outline: none;
+}
+
+input:focus, select:focus, textarea:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px #6254e722;
+}
+
+.search form button {
+    min-height: 44px;
+    white-space: nowrap;
+}
+
+/* SECTIONS */
+.section {
+    padding: 80px 8%;
+}
+
+.section-heading {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.section-heading .eyebrow {
+    color: var(--primary);
+}
+
+.section-heading h2 {
+    color: #202348;
+    font-size: clamp(28px, 4vw, 40px);
+    margin: 10px 0;
+}
+
+.section-heading p:last-child {
+    color: var(--muted);
+}
+
+/* BUS CARDS */
+.cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+    gap: 25px;
+}
+
+.card {
+    position: relative;
+    padding: 28px;
+    border: 1px solid #ffffff;
+    border-radius: 20px;
+    background: rgba(255,255,255,.72);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    box-shadow: 0 10px 35px #29255d0c;
+    transition: .35s;
+    overflow: hidden;
+}
+
+.card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 22px 45px #29255d1c;
+    border-color: #d9d5ff;
+}
+
+.card-icon {
+    width: 65px;
+    height: 65px;
+    border-radius: 18px;
+    display: grid;
+    place-items: center;
+    font-size: 32px;
+    background: linear-gradient(135deg, #e9e7ff, #f3efff);
+    margin-bottom: 22px;
+}
+
+.card h3 {
+    color: #292a59;
+    font-size: 21px;
+    margin-bottom: 12px;
+}
+
+.card p {
+    color: #737895;
+    line-height: 1.8;
+    font-size: 14px;
+}
+
+.seat-tag {
+    display: inline-block;
+    margin-top: 14px;
+    padding: 6px 11px;
+    border-radius: 30px;
+    color: #287451;
+    background: #e0f7eb;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.card button {
+    width: 100%;
+    margin-top: 20px;
+}
+
+/* SERVICES */
+.services {
+    background: linear-gradient(135deg, #151938, #292568, #4338a6);
+    color: white;
+}
+
+.services .section-heading h2 {
+    color: white;
+}
+
+.services .section-heading p:last-child {
+    color: #d4d3f1;
+}
+
+.service-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+    gap: 20px;
+}
+
+.service-card {
+    padding: 25px;
+    border-radius: 18px;
+    background: var(--glass);
+    backdrop-filter: blur(15px);
+    border: 1px solid var(--border);
+    transition: .3s;
+}
+
+.service-card:hover {
+    background: rgba(255,255,255,.2);
+    transform: translateY(-5px);
+}
+
+.service-card .icon {
+    font-size: 30px;
+    margin-bottom: 12px;
+}
+
+.service-card h3 {
+    color: #c4bdff;
+    margin-bottom: 10px;
+}
+
+.service-card p {
+    color: #deddf4;
+    font-size: 14px;
+    line-height: 1.7;
+}
+
+/* AUTHENTICATION FORM */
+#authSection {
+    display: none;
+    width: 410px;
+    max-width: 92%;
+    margin: 50px auto;
+    padding: 30px;
+    border-radius: 22px;
+    background: rgba(255,255,255,.82);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border: 1px solid white;
+    box-shadow: 0 20px 55px #29255d20;
+}
+
+#authSection h2 {
+    text-align: center;
+    color: #252650;
+    margin-bottom: 23px;
+}
+
+#authSection input {
+    margin-bottom: 14px;
+}
+
+#authSection button {
+    width: 100%;
+    margin-top: 10px;
+}
+
+.closeBtn {
+    background: #e9e9f8;
+    color: #34345e;
+}
+
+#message {
+    text-align: center;
+    margin-top: 15px;
+    color: #5146bd;
+    font-size: 13px;
+    overflow-wrap: anywhere;
+}
+
+/* OTHER CONTENT */
+.content-panel {
+    background: white;
+    padding: 30px;
+    border-radius: 18px;
+    box-shadow: 0 8px 30px #29255d0c;
+    margin-bottom: 22px;
+}
+
+.content-panel h2 {
+    color: #252650;
+    margin-bottom: 15px;
+}
+
+.content-panel ul {
+    margin-left: 22px;
+    line-height: 2;
+    color: #666c88;
+}
+
+.content-panel p {
+    color: #666c88;
+    line-height: 1.9;
+}
+
+#searchMessage, #commentMessage, #historyMessage {
+    margin-top: 15px;
+    color: #5146bd;
+    line-height: 1.7;
+    overflow-wrap: anywhere;
+}
+
+/* FOOTER */
+footer {
+    background: #10132b;
+    color: #d8d9ef;
+    text-align: center;
+    padding: 28px 15px;
+    line-height: 1.8;
+    font-size: 13px;
+}
+
+footer span {
+    color: #a9a0ff;
+}
+
+/* RESPONSIVE */
+@media (max-width: 1000px) {
+    header {
+        justify-content: center;
+    }
+
+    .search form {
+        grid-template-columns: repeat(2, minmax(0,1fr));
+    }
+
+    .search form button {
+        grid-column: 1 / -1;
+    }
+}
+
+@media (max-width: 600px) {
+    header {
+        padding: 20px 12px;
+    }
+
+    nav {
+        justify-content: center;
+        gap: 15px;
+    }
+
+    nav a {
+        font-size: 13px;
+    }
+
+    .hero {
+        min-height: 540px;
+    }
+
+    .hero-content {
+        padding: 90px 7% 115px;
+    }
+
+    .search-wrap {
+        width: 92%;
+        margin-top: -45px;
+    }
+
+    .search {
+        padding: 20px;
+    }
+
+    .search form {
+        grid-template-columns: 1fr;
+    }
+
+    .search form button {
+        grid-column: auto;
+    }
+
+    .section {
+        padding: 60px 6%;
+    }
+
+    .card {
+        padding: 24px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<section class="hero" id="home">
+
+<header>
+    <div class="logo">Go<span>Ride.</span></div>
+
+    <nav>
+        <a href="#home">Home</a>
+        <a href="#searchBus">Search Bus</a>
+        <a href="#buses">Bus Types</a>
+        <a href="#history" onclick="showLoginForHistory(event)">My Bookings</a>
+        <a href="#contact">Contact</a>
+        <a class="nav-login" href="#authSection"
+           onclick="showAuth('login'); return false;">Login</a>
+        <a href="#authSection"
+           onclick="showAuth('register'); return false;">Register</a>
+        <a href="#authSection"
+           onclick="showAuth('admin'); return false;">Admin</a>
+    </nav>
+</header>
+
+<div class="hero-content">
+    <p class="eyebrow">Your Journey, Our Priority</p>
+    <h1>Travel Smarter.<br><span>Travel with GoRide.</span></h1>
+    <p class="description">
+        Discover comfortable buses, explore destinations, and plan your next
+        journey with a simple and convenient ticket-booking experience.
+    </p>
+    <button onclick="document.getElementById('searchBus').scrollIntoView({behavior:'smooth'})">
+        Find Your Bus &nbsp; →
+    </button>
+</div>
+
+</section>
+
+<div class="search-wrap" id="searchBus">
+    <div class="search">
+        <h2>🚌 Plan Your Journey</h2>
+
+        <form id="searchForm">
+            <div class="field">
+                <label for="from">From</label>
+                <input type="text" id="from" placeholder="Departure city" required>
+            </div>
+
+            <div class="field">
+                <label for="to">To</label>
+                <input type="text" id="to" placeholder="Destination city" required>
+            </div>
+
+            <div class="field">
+                <label for="travelDate">Travel Date</label>
+                <input type="date" id="travelDate" required>
+            </div>
+
+            <div class="field">
+                <label for="travelTime">Departure</label>
+                <select id="travelTime">
+                    <option value="">Any time</option>
+                    <option>Morning</option>
+                    <option>Afternoon</option>
+                    <option>Evening</option>
+                    <option>Night</option>
+                </select>
+            </div>
+
+            <button type="submit">Search Buses</button>
+        </form>
+
+        <p id="searchMessage"></p>
+    </div>
+</div>
+
+<section class="section" id="buses">
+
+    <div class="section-heading">
+        <p class="eyebrow">Travel Your Way</p>
+        <h2>Choose Your Bus</h2>
+        <p>Find the right travel experience for your next trip.</p>
+    </div>
+
+    <div class="cards">
+
+        <div class="card">
+            <div class="card-icon">🚌</div>
+            <h3>Volvo Bus</h3>
+            <p>Premium AC travel with comfortable pushback seats.</p>
+            <span class="seat-tag">30 sample seats</span>
+            <button onclick="bookBus('Volvo Bus')">Book Now →</button>
+        </div>
+
+        <div class="card">
+            <div class="card-icon">🛏️</div>
+            <h3>Sleeper Coach</h3>
+            <p>Relax during long journeys with comfortable sleeper berths.</p>
+            <span class="seat-tag">18 sample seats</span>
+            <button onclick="bookBus('Sleeper Coach')">Book Now →</button>
+        </div>
+
+        <div class="card">
+            <div class="card-icon">❄️</div>
+            <h3>AC Coach</h3>
+            <p>Enjoy air-conditioned comfort on your journey.</p>
+            <span class="seat-tag">25 sample seats</span>
+            <button onclick="bookBus('AC Coach')">Book Now →</button>
+        </div>
+
+        <div class="card">
+            <div class="card-icon">🎒</div>
+            <h3>Non-AC Coach</h3>
+            <p>A practical and economical option for everyday travel.</p>
+            <span class="seat-tag">35 sample seats</span>
+            <button onclick="bookBus('Non-AC Coach')">Book Now →</button>
+        </div>
+
+    </div>
+</section>
+
+<section class="section services">
+    <div class="section-heading">
+        <p class="eyebrow">Simple. Convenient. Reliable.</p>
+        <h2>Everything You Need</h2>
+        <p>Useful features for passengers and administrators.</p>
+    </div>
+
+    <div class="service-grid">
+        <div class="service-card">
+            <div class="icon">🔎</div>
+            <h3>Easy Search</h3>
+            <p>Enter your departure, destination, and travel date.</p>
+        </div>
+
+        <div class="service-card">
+            <div class="icon">🎫</div>
+            <h3>Ticket Booking</h3>
+            <p>Select a bus category and start your booking.</p>
+        </div>
+
+        <div class="service-card">
+            <div class="icon">📋</div>
+            <h3>Booking History</h3>
+            <p>Review demo reservations associated with your session.</p>
+        </div>
+
+        <div class="service-card">
+            <div class="icon">🛡️</div>
+            <h3>Admin Portal</h3>
+            <p>Explore the administrator login demonstration.</p>
+        </div>
+    </div>
+</section>
+
+<section id="authSection">
+    <h2 id="formTitle">User Login</h2>
+
+    <form id="authForm">
+        <input type="text" id="username" placeholder="Enter Name" required>
+        <input type="email" id="email" placeholder="Enter Email" required>
+        <input type="password" id="password"
+               placeholder="Enter Password" required minlength="6">
+        <button type="submit" id="submitBtn">Login</button>
+    </form>
+
+    <button class="closeBtn" onclick="closeAuth()">Close</button>
+    <p id="message"></p>
+</section>
+
+<section class="section" id="history">
+    <div class="content-panel">
+        <h2>📋 Booking History</h2>
+        <p id="historyMessage">Please log in to view your booking history.</p>
+        <div id="bookingList"></div>
+    </div>
+</section>
+
+<section class="section" id="feedback">
+    <div class="content-panel">
+        <h2>💬 Customer Feedback</h2>
+        <textarea id="comment" rows="4"
+                  placeholder="Share your travel experience..."></textarea>
+        <button onclick="postComment()">Submit Feedback</button>
+        <p id="commentMessage"></p>
+    </div>
+</section>
+
+<section class="section" id="contact">
+    <div class="content-panel">
+        <h2>Contact GoRide</h2>
+        <p>Email: support@busticket.example</p>
+        <p>Phone: +91 98765 43210</p>
+        <p>Address: Bus Booking Center, Chennai, India</p>
+    </div>
+</section>
+
+<footer>
+    <p>© 2026 <span>GoRide</span> | Online Bus Ticket Booking System</p>
+    <p>Demo interface — connect a backend for real bookings and payments.</p>
+</footer>
+
+<script>
+let currentMode = "login";
+let loggedIn = false;
+let currentUser = "";
+let bookings = [];
+
+function showAuth(mode) {
+    currentMode = mode;
+
+    const section = document.getElementById("authSection");
+    const username = document.getElementById("username");
+    const email = document.getElementById("email");
+    const password = document.getElementById("password");
+
+    section.style.display = "block";
+    document.getElementById("message").textContent = "";
+
+    username.style.display = mode === "login" ? "none" : "block";
+    username.required = mode !== "login";
+    email.style.display = "block";
+    password.style.display = "block";
+
+    if (mode === "login") {
+        document.getElementById("formTitle").textContent = "User Login";
+        document.getElementById("submitBtn").textContent = "Login";
+    } else if (mode === "register") {
+        document.getElementById("formTitle").textContent = "Create Your Account";
+        document.getElementById("submitBtn").textContent = "Register";
+    } else {
+        document.getElementById("formTitle").textContent = "Admin Login";
+        document.getElementById("submitBtn").textContent = "Admin Login";
+    }
+
+    section.scrollIntoView({ behavior: "smooth", block: "center" });
+}
+
+function closeAuth() {
+    document.getElementById("authSection").style.display = "none";
+}
+
+document.getElementById("authForm").addEventListener("submit", function(event) {
+    event.preventDefault();
+
+    const username = document.getElementById("username").value.trim();
+    const email = document.getElementById("email").value.trim();
+    const password = document.getElementById("password").value;
+    const message = document.getElementById("message");
+
+    if (currentMode === "register") {
+        currentUser = username;
+        loggedIn = true;
+        message.textContent = "Demo registration successful!";
+    } else if (currentMode === "admin") {
+        if (email === "admin@busticket.com" && password === "admin123") {
+            currentUser = "Administrator";
+            loggedIn = true;
+            message.textContent = "Demo admin login successful!";
+        } else {
+            message.textContent =
+                "Demo credentials: admin@busticket.com / admin123";
+            return;
+        }
+    } else {
+        currentUser = email;
+        loggedIn = true;
+        message.textContent = "Demo login successful!";
+    }
+
+    updateHistory();
+
+    setTimeout(closeAuth, 1500);
+});
+
+function bookBus(busName) {
+    if (!loggedIn) {
+        alert("Please log in or register before booking.");
+        showAuth("login");
+        return;
+    }
+
+    const from = document.getElementById("from").value.trim();
+    const to = document.getElementById("to").value.trim();
+    const date = document.getElementById("travelDate").value;
+
+    if (!from || !to || !date) {
+        alert("Please enter your departure, destination, and travel date.");
+        document.getElementById("searchBus").scrollIntoView({
+            behavior: "smooth"
+        });
+        return;
+    }
+
+    if (from.toLowerCase() === to.toLowerCase()) {
+        alert("Departure and destination must be different.");
+        return;
+    }
+
+    if (date < getLocalDate()) {
+        alert("Please choose today or a future travel date.");
+        return;
+    }
+
+    bookings.push({
+        bus: busName,
+        from: from,
+        to: to,
+        date: date
+    });
+
+    alert("Demo booking created for " + busName + "!");
+    updateHistory();
+}
+
+function showLoginForHistory(event) {
+    if (!loggedIn) {
+        event.preventDefault();
+        showAuth("login");
+    } else {
+        updateHistory();
+    }
+}
+
+function updateHistory() {
+    if (!loggedIn) return;
+
+    document.getElementById("historyMessage").textContent =
+        "Logged in as " + currentUser +
+        ". Total demo bookings: " + bookings.length;
+
+    const list = document.getElementById("bookingList");
+    list.replaceChildren();
+
+    bookings.forEach(function(booking, index) {
+        const item = document.createElement("p");
+        item.style.padding = "12px 0";
+        item.style.borderBottom = "1px solid #e5e5f5";
+        item.textContent = (index + 1) + ". " + booking.bus +
+            " | " + booking.from + " to " + booking.to +
+            " | " + booking.date;
+        list.appendChild(item);
+    });
+}
+
+function getLocalDate() {
+    const now = new Date();
+
+    return [
+        now.getFullYear(),
+        String(now.getMonth() + 1).padStart(2, "0"),
+        String(now.getDate()).padStart(2, "0")
+    ].join("-");
+}
+
+document.getElementById("searchForm").addEventListener("submit", function(event) {
+    event.preventDefault();
+
+    const from = document.getElementById("from").value.trim();
+    const to = document.getElementById("to").value.trim();
+    const date = document.getElementById("travelDate").value;
+    const message = document.getElementById("searchMessage");
+
+    if (from.toLowerCase() === to.toLowerCase()) {
+        message.textContent = "Departure and destination must be different.";
+        return;
+    }
+
+    if (date < getLocalDate()) {
+        message.textContent = "Please choose today or a future travel date.";
+        return;
+    }
+
+    message.textContent = "Demo search: " + from + " → " + to +
+        " on " + date + ". Select a bus category below to continue.";
+
+    document.getElementById("buses").scrollIntoView({
+        behavior: "smooth"
+    });
+});
+
+function postComment() {
+    const comment = document.getElementById("comment").value.trim();
+    const message = document.getElementById("commentMessage");
+
+    if (!comment) {
+        message.textContent = "Please enter your feedback.";
+        return;
+    }
+
+    message.textContent = "Thank you! Your demo feedback has been submitted.";
+    document.getElementById("comment").value = "";
+}
+</script>
+
+</body>
+</html>
