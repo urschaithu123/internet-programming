@@ -1,0 +1,940 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Indian Railways | Train Reservation</title>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+:root {
+    --saffron: #ff9933;
+    --green: #138808;
+    --navy: #000080;
+    --white: #ffffff;
+    --text: #263238;
+    --muted: #64748b;
+    --glass: rgba(255, 255, 255, 0.88);
+    --border: rgba(0, 0, 128, 0.12);
+    --shadow: 0 14px 40px rgba(22, 44, 35, 0.10);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Inter', Arial, sans-serif;
+    scroll-behavior: smooth;
+}
+
+body {
+    min-height: 100vh;
+    color: var(--text);
+    background:
+        radial-gradient(circle at 5% 10%, rgba(255,153,51,.13), transparent 30%),
+        radial-gradient(circle at 95% 40%, rgba(19,136,8,.10), transparent 30%),
+        linear-gradient(135deg, #fffaf3, #ffffff 48%, #f2fff0);
+    background-attachment: fixed;
+    line-height: 1.6;
+}
+
+header {
+    padding: 25px 20px;
+    text-align: center;
+    color: white;
+    background: linear-gradient(110deg, #e87512, var(--saffron) 42%, #ffb85c);
+    border-bottom: 5px solid var(--white);
+}
+
+header h1 {
+    font-size: clamp(25px, 4vw, 38px);
+    font-weight: 800;
+    letter-spacing: -.8px;
+}
+
+header p {
+    color: #fffaf2;
+    margin-top: 5px;
+}
+
+nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 6px;
+    padding: 13px;
+    background: rgba(255,255,255,.94);
+    backdrop-filter: blur(18px);
+    border-bottom: 2px solid rgba(19,136,8,.18);
+    box-shadow: 0 5px 20px rgba(0,0,0,.04);
+}
+
+nav a {
+    color: var(--navy);
+    text-decoration: none;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 9px 12px;
+    border-radius: 30px;
+    transition: .25s;
+}
+
+nav a:hover {
+    color: white;
+    background: var(--green);
+    transform: translateY(-2px);
+}
+
+.hero {
+    min-height: 390px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 65px 20px 95px;
+    color: white;
+    background:
+        linear-gradient(110deg,
+            rgba(255,153,51,.88),
+            rgba(255,255,255,.72) 48%,
+            rgba(19,136,8,.83)),
+        url("https://images.unsplash.com/photo-1474487548417-781cb71495f3?auto=format&fit=crop&w=1800&q=85")
+        center / cover no-repeat;
+    position: relative;
+}
+
+.hero h1 {
+    font-size: clamp(30px, 5vw, 48px);
+    line-height: 1.2;
+    font-weight: 800;
+    margin-bottom: 14px;
+    color: var(--navy);
+    text-shadow: 0 1px 2px rgba(255,255,255,.2);
+}
+
+.hero p {
+    font-size: 17px;
+    color: #172b18;
+    font-weight: 600;
+}
+
+.hero-badge {
+    display: inline-block;
+    margin-bottom: 18px;
+    padding: 7px 16px;
+    border-radius: 30px;
+    background: rgba(255,255,255,.8);
+    color: var(--green);
+    border: 1px solid rgba(19,136,8,.2);
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 1px;
+}
+
+.container {
+    width: 92%;
+    max-width: 1200px;
+    margin: -40px auto 45px;
+    position: relative;
+    z-index: 2;
+}
+
+.search-box,
+.section {
+    background: var(--glass);
+    backdrop-filter: blur(18px);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 27px;
+    margin-bottom: 25px;
+    box-shadow: var(--shadow);
+    transition: .3s;
+}
+
+.search-box:hover,
+.section:hover {
+    border-color: rgba(19,136,8,.35);
+    box-shadow: 0 18px 45px rgba(22,44,35,.13);
+}
+
+.search-box {
+    border-top: 5px solid var(--saffron);
+}
+
+.search-box h2,
+.section h2 {
+    color: var(--navy);
+    font-size: 23px;
+    font-weight: 800;
+    margin-bottom: 12px;
+}
+
+.search-box h2::before {
+    content: "✦ ";
+    color: var(--green);
+}
+
+.search-box > p,
+.section > p {
+    color: var(--muted);
+    font-size: 14px;
+}
+
+form {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 15px;
+}
+
+input,
+select {
+    width: 100%;
+    min-width: 0;
+    padding: 14px;
+    border: 1px solid #d7e2d6;
+    border-radius: 12px;
+    outline: none;
+    color: #263238;
+    background: rgba(255,255,255,.96);
+    font-size: 14px;
+    transition: .25s;
+}
+
+input::placeholder {
+    color: #84918a;
+}
+
+input:focus,
+select:focus {
+    border-color: var(--green);
+    box-shadow: 0 0 0 4px rgba(19,136,8,.10);
+}
+
+select option {
+    background: white;
+    color: #263238;
+}
+
+button {
+    border: none;
+    border-radius: 11px;
+    padding: 13px 19px;
+    color: white;
+    background: linear-gradient(120deg, var(--green), #209c24);
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 7px 18px rgba(19,136,8,.15);
+    transition: .25s;
+}
+
+button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 23px rgba(19,136,8,.23);
+    filter: brightness(1.04);
+}
+
+button:active {
+    transform: scale(.98);
+}
+
+.closeBtn {
+    background: #64748b;
+    box-shadow: none;
+}
+
+.table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+    margin-top: 18px;
+    border-radius: 13px;
+    border: 1px solid #e2e8e2;
+}
+
+table {
+    width: 100%;
+    min-width: 650px;
+    border-collapse: separate;
+    border-spacing: 0;
+    background: rgba(255,255,255,.8);
+}
+
+th,
+td {
+    padding: 14px 12px;
+    text-align: center;
+    border-bottom: 1px solid #e7eee6;
+    font-size: 13px;
+}
+
+th {
+    color: white;
+    background: var(--navy);
+}
+
+td {
+    color: #334155;
+}
+
+tbody tr {
+    transition: .2s;
+}
+
+tbody tr:nth-child(even) {
+    background: #f7fbf6;
+}
+
+tbody tr:hover {
+    background: #fff2df;
+}
+
+tbody tr:last-child td {
+    border-bottom: none;
+}
+
+tbody button {
+    padding: 9px 15px;
+    font-size: 12px;
+    background: var(--green);
+}
+
+#authSection {
+    display: none;
+    width: 92%;
+    max-width: 430px;
+    margin: 30px auto;
+    padding: 28px;
+    background: rgba(255,255,255,.97);
+    border: 1px solid rgba(0,0,128,.15);
+    border-top: 5px solid var(--saffron);
+    border-radius: 20px;
+    box-shadow: 0 20px 55px rgba(0,0,0,.12);
+    animation: appear .3s ease;
+}
+
+#authSection h2 {
+    text-align: center;
+    color: var(--navy);
+    margin-bottom: 20px;
+}
+
+#authForm {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+#authForm input {
+    margin: 0;
+}
+
+#authForm button,
+#authSection > .closeBtn {
+    width: 100%;
+}
+
+#authSection > .closeBtn {
+    margin-top: 12px;
+}
+
+#message,
+#searchMessage,
+#pnrMessage {
+    margin-top: 13px;
+    color: var(--green);
+    font-size: 14px;
+    font-weight: 600;
+    overflow-wrap: anywhere;
+}
+
+.error {
+    color: #c62828 !important;
+}
+
+.section ul {
+    padding-left: 24px;
+    margin-top: 12px;
+}
+
+.section li {
+    padding: 5px 0;
+    color: #475569;
+}
+
+#bookingList li {
+    padding: 12px 14px;
+    margin: 10px 0;
+    list-style-position: inside;
+    border-radius: 10px;
+    background: #f1faef;
+    border-left: 4px solid var(--green);
+    overflow-wrap: anywhere;
+}
+
+#pnr input {
+    max-width: 450px;
+    margin: 5px 8px 5px 0;
+}
+
+#pnr button {
+    margin-top: 5px;
+}
+
+#contact p {
+    margin-top: 8px;
+    color: #475569;
+}
+
+footer {
+    padding: 25px 15px;
+    text-align: center;
+    color: white;
+    background: linear-gradient(110deg, #e87512, var(--saffron) 45%, var(--green));
+    border-top: 5px solid white;
+    font-size: 13px;
+}
+
+@keyframes appear {
+    from {
+        opacity: 0;
+        transform: translateY(12px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@media (max-width: 900px) {
+    .container {
+        width: 94%;
+    }
+
+    .search-box,
+    .section {
+        padding: 22px;
+    }
+}
+
+@media (max-width: 600px) {
+    header {
+        padding: 22px 12px;
+    }
+
+    nav {
+        gap: 4px;
+        padding: 9px 5px;
+    }
+
+    nav a {
+        font-size: 11px;
+        padding: 8px;
+    }
+
+    .hero {
+        min-height: 300px;
+        padding: 55px 15px 80px;
+    }
+
+    .hero h1 {
+        font-size: 30px;
+    }
+
+    .hero p {
+        font-size: 14px;
+    }
+
+    .container {
+        width: 94%;
+        margin-top: -28px;
+    }
+
+    .search-box,
+    .section {
+        padding: 17px;
+        border-radius: 16px;
+        margin-bottom: 19px;
+    }
+
+    .search-box h2,
+    .section h2 {
+        font-size: 20px;
+    }
+
+    form {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+
+    #authSection {
+        padding: 21px;
+    }
+
+    #pnr input {
+        max-width: 100%;
+        margin-right: 0;
+    }
+
+    #pnr button {
+        width: 100%;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        scroll-behavior: auto !important;
+        animation-duration: .01ms !important;
+        transition-duration: .01ms !important;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header id="home">
+    <h1>🚆 Indian Railways Reservation</h1>
+    <p>Connecting India — Your Journey, Our Priority</p>
+</header>
+
+<nav>
+    <a href="#home">Home</a>
+    <a href="#searchTrains">Search Trains</a>
+    <a href="#availableTrains">Available Trains</a>
+    <a href="#pnr">PNR Status</a>
+    <a href="#history" onclick="showHistory(event)">Booking History</a>
+    <a href="#" onclick="showAuth('login'); return false;">Login</a>
+    <a href="#" onclick="showAuth('register'); return false;">Register</a>
+    <a href="#" onclick="showAuth('admin'); return false;">Admin Login</a>
+    <a href="#contact">Contact</a>
+</nav>
+
+<section class="hero">
+    <span class="hero-badge">✦ ONE INDIA · ONE JOURNEY</span>
+    <h1>Explore India by Rail</h1>
+    <p>Discover destinations, plan your journey and travel with comfort.</p>
+</section>
+
+<section id="authSection">
+    <h2 id="formTitle">User Login</h2>
+
+    <form id="authForm">
+        <input type="text" id="username" placeholder="Enter Name">
+
+        <input type="email" id="email" placeholder="Enter Email" required>
+
+        <input type="password" id="password" placeholder="Enter Password" required>
+
+        <button type="submit" id="submitBtn">Login</button>
+    </form>
+
+    <button type="button" class="closeBtn" onclick="closeAuth()">Close</button>
+    <p id="message" role="status" aria-live="polite"></p>
+</section>
+
+<div class="container">
+
+    <section class="search-box" id="searchTrains">
+        <h2>Find Your Train</h2>
+        <p>Enter your journey details to explore our sample trains.</p>
+        <br>
+
+        <form id="trainSearchForm">
+            <input type="text" id="fromStation" placeholder="From Station" required>
+
+            <input type="text" id="toStation" placeholder="To Station" required>
+
+            <input type="date" id="journeyDate" required>
+
+            <select id="trainClass" required>
+                <option value="">Select Class</option>
+                <option value="Sleeper (SL)">Sleeper (SL)</option>
+                <option value="3A">AC 3 Tier (3A)</option>
+                <option value="2A">AC 2 Tier (2A)</option>
+                <option value="1A">First AC (1A)</option>
+                <option value="Chair Car (CC)">Chair Car (CC)</option>
+            </select>
+
+            <button type="submit">🔍 Search Trains</button>
+        </form>
+
+        <p id="searchMessage" role="status" aria-live="polite"></p>
+    </section>
+
+    <section class="section" id="availableTrains">
+        <h2>🚆 Available Trains</h2>
+        <p>Sample train information for demonstration purposes.</p>
+
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Train No.</th>
+                        <th>Train Name</th>
+                        <th>Departure</th>
+                        <th>Arrival</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr>
+                        <td>12627</td>
+                        <td>Karnataka Express</td>
+                        <td>08:00</td>
+                        <td>18:30</td>
+                        <td>Available*</td>
+                        <td>
+                            <button type="button" onclick="bookTrain('12627','Karnataka Express')">Book</button>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>12723</td>
+                        <td>Telangana Express</td>
+                        <td>09:30</td>
+                        <td>20:15</td>
+                        <td>Available*</td>
+                        <td>
+                            <button type="button" onclick="bookTrain('12723','Telangana Express')">Book</button>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>12650</td>
+                        <td>Sampark Kranti</td>
+                        <td>11:00</td>
+                        <td>22:00</td>
+                        <td>RAC*</td>
+                        <td>
+                            <button type="button" onclick="bookTrain('12650','Sampark Kranti')">Book</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <p><small>*Sample statuses only. Live availability is not connected.</small></p>
+    </section>
+
+    <section class="section" id="pnr">
+        <h2>🎫 Check PNR Status</h2>
+        <p>Enter a PNR number to see the demo status message.</p>
+        <br>
+
+        <input type="text" id="pnrNumber"
+               placeholder="Enter 10-digit PNR Number"
+               inputmode="numeric" maxlength="10">
+
+        <button type="button" onclick="checkPNR()">Check Status</button>
+
+        <p id="pnrMessage" role="status" aria-live="polite"></p>
+    </section>
+
+    <section class="section" id="history">
+        <h2>📋 Booking History</h2>
+
+        <p id="historyMessage" role="status" aria-live="polite">
+            Please log in to view your demo booking history.
+        </p>
+
+        <ul id="bookingList"></ul>
+    </section>
+
+    <section class="section">
+        <h2>✨ Passenger Services</h2>
+        <ul>
+            <li>User Registration and Login</li>
+            <li>Train Search</li>
+            <li>Seat Availability Demo</li>
+            <li>Ticket Booking Demo</li>
+            <li>Payment Service Concept</li>
+            <li>Booking History</li>
+            <li>Ticket Cancellation Concept</li>
+            <li>Refund Status Concept</li>
+            <li>PNR Status Demo</li>
+        </ul>
+    </section>
+
+    <section class="section">
+        <h2>🛠 Administrator Services</h2>
+        <ul>
+            <li>Manage Train Details</li>
+            <li>Manage Routes</li>
+            <li>Manage Seat Availability</li>
+            <li>Manage Users</li>
+            <li>Update Fare Details</li>
+            <li>Manage Refund Rules</li>
+            <li>Generate Reports</li>
+            <li>View Payment Details</li>
+        </ul>
+        <p><small>These are proposed services; an actual admin dashboard is not connected.</small></p>
+    </section>
+
+    <section class="section" id="contact">
+        <h2>📞 Contact Us</h2>
+        <p>Email: support@trainreservation.com</p>
+        <p>Phone: +91 98765 43210</p>
+        <p>Address: Railway Reservation Office</p>
+    </section>
+
+</div>
+
+<footer>
+    <p>© 2026 Indian Railways Reservation Demo | All Rights Reserved</p>
+    <p>Inspired by the colours of the Indian National Flag.</p>
+</footer>
+
+<script>
+let currentMode = "login";
+let loggedIn = false;
+let currentUser = "";
+let bookings = [];
+
+function getLocalDate() {
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, "0");
+    const day = String(now.getDate()).padStart(2, "0");
+
+    return `${year}-${month}-${day}`;
+}
+
+const journeyDateInput = document.getElementById("journeyDate");
+journeyDateInput.min = getLocalDate();
+
+function showAuth(mode) {
+    currentMode = mode;
+
+    const section = document.getElementById("authSection");
+    const title = document.getElementById("formTitle");
+    const username = document.getElementById("username");
+    const email = document.getElementById("email");
+    const password = document.getElementById("password");
+    const submitBtn = document.getElementById("submitBtn");
+    const message = document.getElementById("message");
+
+    section.style.display = "block";
+    message.textContent = "";
+    message.classList.remove("error");
+
+    document.getElementById("authForm").reset();
+
+    username.style.display = mode === "login" ? "none" : "block";
+    username.required = mode !== "login";
+
+    if (mode === "login") {
+        title.textContent = "User Login";
+        submitBtn.textContent = "Login";
+    } else if (mode === "register") {
+        title.textContent = "Create Your Account";
+        submitBtn.textContent = "Register";
+    } else {
+        title.textContent = "Administrator Login";
+        submitBtn.textContent = "Admin Login";
+    }
+
+    section.scrollIntoView({ behavior: "smooth", block: "center" });
+}
+
+function closeAuth() {
+    document.getElementById("authSection").style.display = "none";
+}
+
+document.getElementById("authForm").addEventListener("submit", function(event) {
+    event.preventDefault();
+
+    const name = document.getElementById("username").value.trim();
+    const email = document.getElementById("email").value.trim();
+    const password = document.getElementById("password").value;
+    const message = document.getElementById("message");
+
+    message.classList.remove("error");
+
+    if (currentMode === "admin") {
+        if (email === "admin@train.com" && password === "admin123") {
+            loggedIn = true;
+            currentUser = "Administrator";
+            message.textContent = "Demo admin login successful!";
+        } else {
+            message.textContent = "Invalid demo credentials. Use admin@train.com / admin123.";
+            message.classList.add("error");
+            return;
+        }
+    } else if (currentMode === "register") {
+        if (name.length < 2) {
+            message.textContent = "Please enter your name.";
+            message.classList.add("error");
+            return;
+        }
+
+        loggedIn = true;
+        currentUser = name;
+        message.textContent = "Demo registration successful!";
+    } else {
+        loggedIn = true;
+        currentUser = email;
+        message.textContent = "Demo login successful!";
+    }
+
+    updateHistory();
+
+    setTimeout(function() {
+        closeAuth();
+    }, 1200);
+});
+
+document.getElementById("trainSearchForm").addEventListener("submit", function(event) {
+    event.preventDefault();
+
+    const from = document.getElementById("fromStation").value.trim();
+    const to = document.getElementById("toStation").value.trim();
+    const date = journeyDateInput.value;
+    const trainClass = document.getElementById("trainClass").value;
+    const message = document.getElementById("searchMessage");
+
+    message.classList.remove("error");
+
+    if (from.toLowerCase() === to.toLowerCase()) {
+        message.textContent = "From and To stations must be different.";
+        message.classList.add("error");
+        return;
+    }
+
+    if (date < getLocalDate()) {
+        message.textContent = "Please select today or a future date.";
+        message.classList.add("error");
+        return;
+    }
+
+    message.textContent =
+        `Demo search: ${from} to ${to} on ${date}, class ${trainClass}. ` +
+        "The sample trains below are not filtered by route or live availability.";
+
+    document.getElementById("availableTrains").scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+    });
+});
+
+function bookTrain(trainNo, trainName) {
+    if (!loggedIn) {
+        alert("Please log in or register before booking.");
+        showAuth("login");
+        return;
+    }
+
+    const from = document.getElementById("fromStation").value.trim();
+    const to = document.getElementById("toStation").value.trim();
+    const date = journeyDateInput.value;
+    const trainClass = document.getElementById("trainClass").value;
+
+    if (!from || !to || !date || !trainClass) {
+        alert("Please enter the journey details and search first.");
+        document.getElementById("searchTrains").scrollIntoView({
+            behavior: "smooth"
+        });
+        return;
+    }
+
+    if (from.toLowerCase() === to.toLowerCase()) {
+        alert("From and To stations must be different.");
+        return;
+    }
+
+    if (date < getLocalDate()) {
+        alert("Please select today or a future journey date.");
+        return;
+    }
+
+    const booking = {
+        trainNo: trainNo,
+        trainName: trainName,
+        from: from,
+        to: to,
+        date: date,
+        trainClass: trainClass
+    };
+
+    bookings.push(booking);
+    updateHistory();
+
+    alert("Demo booking created for " + trainName + "!");
+    document.getElementById("history").scrollIntoView({
+        behavior: "smooth"
+    });
+}
+
+function updateHistory() {
+    const historyMessage = document.getElementById("historyMessage");
+    const list = document.getElementById("bookingList");
+
+    historyMessage.textContent =
+        "Logged in as " + currentUser +
+        ". Demo bookings: " + bookings.length;
+
+    list.replaceChildren();
+
+    if (bookings.length === 0) {
+        const item = document.createElement("li");
+        item.textContent = "No demo bookings yet.";
+        list.appendChild(item);
+        return;
+    }
+
+    bookings.forEach(function(booking) {
+        const item = document.createElement("li");
+
+        item.textContent =
+            booking.trainNo + " - " + booking.trainName +
+            " | " + booking.from + " to " + booking.to +
+            " | " + booking.date + " | " + booking.trainClass;
+
+        list.appendChild(item);
+    });
+}
+
+function showHistory(event) {
+    if (!loggedIn) {
+        event.preventDefault();
+        showAuth("login");
+    } else {
+        updateHistory();
+    }
+}
+
+function checkPNR() {
+    const pnr = document.getElementById("pnrNumber").value.trim();
+    const message = document.getElementById("pnrMessage");
+
+    message.classList.remove("error");
+
+    if (!pnr) {
+        message.textContent = "Please enter a PNR number.";
+        message.classList.add("error");
+        return;
+    }
+
+    if (!/^\d{10}$/.test(pnr)) {
+        message.textContent = "Please enter a valid 10-digit PNR number.";
+        message.classList.add("error");
+        return;
+    }
+
+    message.textContent =
+        "Demo only: live PNR status is not connected to a railway service.";
+}
+</script>
+
+</body>
+</html>
